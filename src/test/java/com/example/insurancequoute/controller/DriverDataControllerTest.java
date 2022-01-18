@@ -75,8 +75,19 @@ class DriverDataControllerTest {
     }
 
     @Test
-    public void getDriverById() {
-        fail();
+    @DisplayName("GET driver/get -> 200")
+    public void getDriverById() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/driver/get/23535"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("GET driver/get missing param -> 405")
+    public void getDriverByIdMissingId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/driver/get/"))
+                .andDo(print())
+                .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
