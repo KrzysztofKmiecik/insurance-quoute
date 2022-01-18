@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +25,8 @@ class DriverDataRepositoryTest {
     @DisplayName("Should return all two drivers "+ ID_1 + " and " + ID_2)
     public void shouldGetAllDrivers() {
 
-        insertExampleDrivers(ID_1, ID_2);
+        insertExampleDriver(ID_1);
+        insertExampleDriver(ID_2);
 
         List<DriverData> foundDrivers = driverDataRepository.findAll();
 
@@ -59,7 +61,8 @@ class DriverDataRepositoryTest {
     @Test
     @DisplayName("Should delete driver "+ ID_1)
     public void shouldDeleteDriverById() {
-        insertExampleDrivers(ID_1, ID_2);
+        insertExampleDriver(ID_1);
+        insertExampleDriver(ID_2);
 
         assertEquals(2, driverDataRepository.findAll().size());
 
@@ -72,7 +75,8 @@ class DriverDataRepositoryTest {
     @Test
     @DisplayName("Should throw exception when no driver found by id")
     public void shouldThrowExceptionWhenDeleteDriverByIdMissingDriver() {
-        insertExampleDrivers(ID_1, ID_2);
+        insertExampleDriver(ID_1);
+        insertExampleDriver(ID_2);
 
         assertThrows(
                 EmptyResultDataAccessException.class,
@@ -83,7 +87,8 @@ class DriverDataRepositoryTest {
     @Test
     @DisplayName("Should find driver by id "+ ID_2)
     public void shouldGetDriverById() {
-        insertExampleDrivers(ID_1, ID_2);
+        insertExampleDriver(ID_1);
+        insertExampleDriver(ID_2);
 
         DriverData foundDriver = driverDataRepository.getById(ID_2);
 
@@ -91,67 +96,44 @@ class DriverDataRepositoryTest {
     }
 
     @Test
-    public void shouldGetDriverByIdMissingDriver() {
-        fail();
-    }
-
-    @Test
-    @DisplayName("Should update phone number for "+ ID_1)
-    public void shouldUpdatePhoneById() {
-        insertExampleDrivers(ID_1, ID_2);
-
-        DriverData foundDriver = driverDataRepository.getById(ID_1);
-
-        assertEquals("123456789", foundDriver.getTelephoneNumber());
-
-        //driverDataRepository.updatePhoneById(ID_1, "42763784587354");
-
-        foundDriver = driverDataRepository.getById(ID_1);
-
-        assertEquals("42763784587354", foundDriver.getTelephoneNumber());
-    }
-
-    @Test
-    public void shouldUpdatePhoneByIdMissingDriver() {
-        fail();
-    }
-
-    @Test
     @DisplayName("Should update driver "+ ID_1)
     public void shouldUpdateDriverById() {
-        insertExampleDrivers(ID_1, ID_2);
+        String newName = "Bartosz";
+        insertExampleDriver(ID_1);
+        insertExampleDriver(ID_2);
 
         DriverData foundDriver = driverDataRepository.getById(ID_1);
 
         assertEquals("Adam", foundDriver.getOwnerFirstName());
 
-        DriverData driverToUpdate = DriverData.builder()
-                .id(ID_1)
-                .ownerFirstName("Bartek")
-                .build();
+        foundDriver.setOwnerFirstName(newName);
 
-        //driverDataRepository.updateDriverById(ID_1, driverToUpdate);
-        driverDataRepository.save(driverToUpdate);
+        driverDataRepository.save(foundDriver);
         foundDriver = driverDataRepository.getById(ID_1);
 
-        assertEquals("Bartek", foundDriver.getOwnerFirstName());
+        assertEquals(newName, foundDriver.getOwnerFirstName());
     }
 
-    @Test
-    public void shouldUpdateDriverByIdMissingDriver() {
-        fail();
-    }
-
-    private void insertExampleDrivers(long ID1, long ID2) {
+    private void insertExampleDriver(long id) {
         DriverData newDriver1 = DriverData.builder()
-                .id(ID1)
-                .telephoneNumber("123456789")
+                .id(id)
+                .prefix("pan")
                 .ownerFirstName("Adam")
+                .ownerLastName("Adamski")
+                .telephoneNumber("123456789")
+                .addressLine1("ul. Adamska")
+                .addressLine2("1/2")
+                .city("Adamowo")
+                .postCode("00-000")
+                .vehicleType("Cabriolet")
+                .engineSize(1000)
+                .additionalDrivers(1)
+                .commercialPurpose(true)
+                .usedOutsideTheRegisteredState(true)
+                .currentValue(1234567)
+                .firstRegisteredDate(LocalDateTime.MIN)
+                .premium(100)
                 .build();
         driverDataRepository.save(newDriver1);
-        DriverData newDriver2 = DriverData.builder()
-                .id(ID2)
-                .build();
-        driverDataRepository.save(newDriver2);
     }
 }
