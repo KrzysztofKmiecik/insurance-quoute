@@ -56,7 +56,24 @@ class DriverDataRepositoryTest {
 
     @Test
     public void shouldDeleteDriverById() {
-        fail();
+        final long ID1 = 123L;
+        final long ID2 = 456L;
+
+        DriverData newDriver1 = DriverData.builder()
+                .id(ID1)
+                .build();
+        driverDataRepository.save(newDriver1);
+        DriverData newDriver2 = DriverData.builder()
+                .id(ID2)
+                .build();
+        driverDataRepository.save(newDriver2);
+
+        assertEquals(2, driverDataRepository.findAll().size());
+
+        driverDataRepository.deleteById(ID1);
+
+        assertEquals(1, driverDataRepository.findAll().size());
+        assertEquals(ID2, driverDataRepository.findAll().get(0).getId());
     }
 
     @Test

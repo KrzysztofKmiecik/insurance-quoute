@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 public class DriverData {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String prefix;
