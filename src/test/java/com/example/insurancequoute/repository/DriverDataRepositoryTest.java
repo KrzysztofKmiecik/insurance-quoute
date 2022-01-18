@@ -1,30 +1,30 @@
 package com.example.insurancequoute.repository;
 
 import com.example.insurancequoute.model.DriverData;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
-import static java.util.Objects.isNull;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class DriverDataRepositoryTest {
 
+    public static final long ID_1 = 123L;
+    public static final long ID_2 = 456L;
+
     @Autowired
     private DriverDataRepository driverDataRepository;
 
     @Test
+    @DisplayName("Should return all two drivers "+ ID_1 + " and " + ID_2)
     public void shouldGetAllDrivers() {
-        final long ID1 = 123L;
-        final long ID2 = 456L;
 
-        insertExampleDrivers(ID1, ID2);
+        insertExampleDrivers(ID_1, ID_2);
 
         List<DriverData> foundDrivers = driverDataRepository.findAll();
 
@@ -33,6 +33,7 @@ class DriverDataRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should return empty list when no driver found by getAll")
     public void shouldGetAllDriversNoRecords() {
         List<DriverData> foundDrivers = driverDataRepository.findAll();
 
@@ -41,10 +42,11 @@ class DriverDataRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should save new driver "+ ID_1)
     public void shouldSaveNewDriver() {
         int startNumberOfDrivers = driverDataRepository.findAll().size();
         DriverData newDriver = DriverData.builder()
-                .id(123L)
+                .id(ID_1)
                 .build();
 
         driverDataRepository.save(newDriver);
@@ -55,26 +57,22 @@ class DriverDataRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should delete driver "+ ID_1)
     public void shouldDeleteDriverById() {
-        final long ID1 = 123L;
-        final long ID2 = 456L;
-
-        insertExampleDrivers(ID1, ID2);
+        insertExampleDrivers(ID_1, ID_2);
 
         assertEquals(2, driverDataRepository.findAll().size());
 
-        driverDataRepository.deleteById(ID1);
+        driverDataRepository.deleteById(ID_1);
 
         assertEquals(1, driverDataRepository.findAll().size());
-        assertEquals(ID2, driverDataRepository.findAll().get(0).getId());
+        assertEquals(ID_2, driverDataRepository.findAll().get(0).getId());
     }
 
     @Test
-    public void shouldDeleteDriverByIdMissingDriver() {
-        final long ID1 = 123L;
-        final long ID2 = 456L;
-
-        insertExampleDrivers(ID1, ID2);
+    @DisplayName("Should throw exception when no driver found by id")
+    public void shouldThrowExceptionWhenDeleteDriverByIdMissingDriver() {
+        insertExampleDrivers(ID_1, ID_2);
 
         assertThrows(
                 EmptyResultDataAccessException.class,
@@ -83,15 +81,13 @@ class DriverDataRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should find driver by id "+ ID_2)
     public void shouldGetDriverById() {
-        final long ID1 = 123L;
-        final long ID2 = 456L;
+        insertExampleDrivers(ID_1, ID_2);
 
-        insertExampleDrivers(ID1, ID2);
+        DriverData foundDriver = driverDataRepository.getById(ID_2);
 
-        DriverData foundDriver = driverDataRepository.getById(ID2);
-
-        assertEquals(ID2, foundDriver.getId());
+        assertEquals(ID_2, foundDriver.getId());
     }
 
     @Test
@@ -100,19 +96,17 @@ class DriverDataRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should update phone number for "+ ID_1)
     public void shouldUpdatePhoneById() {
-        final long ID1 = 123L;
-        final long ID2 = 456L;
+        insertExampleDrivers(ID_1, ID_2);
 
-        insertExampleDrivers(ID1, ID2);
-
-        DriverData foundDriver = driverDataRepository.getById(ID1);
+        DriverData foundDriver = driverDataRepository.getById(ID_1);
 
         assertEquals("123456789", foundDriver.getTelephoneNumber());
 
-        driverDataRepository.updatePhoneById(ID1, "42763784587354");
+        //driverDataRepository.updatePhoneById(ID_1, "42763784587354");
 
-        foundDriver = driverDataRepository.getById(ID1);
+        foundDriver = driverDataRepository.getById(ID_1);
 
         assertEquals("42763784587354", foundDriver.getTelephoneNumber());
     }
@@ -123,24 +117,22 @@ class DriverDataRepositoryTest {
     }
 
     @Test
+    @DisplayName("Should update driver "+ ID_1)
     public void shouldUpdateDriverById() {
-        final long ID1 = 123L;
-        final long ID2 = 456L;
+        insertExampleDrivers(ID_1, ID_2);
 
-        insertExampleDrivers(ID1, ID2);
-
-        DriverData foundDriver = driverDataRepository.getById(ID1);
+        DriverData foundDriver = driverDataRepository.getById(ID_1);
 
         assertEquals("Adam", foundDriver.getOwnerFirstName());
 
         DriverData driverToUpdate = DriverData.builder()
-                .id(ID1)
+                .id(ID_1)
                 .ownerFirstName("Bartek")
                 .build();
 
-        driverDataRepository.updateDriverById(ID1, driverToUpdate);
-
-        foundDriver = driverDataRepository.getById(ID1);
+        //driverDataRepository.updateDriverById(ID_1, driverToUpdate);
+        driverDataRepository.save(driverToUpdate);
+        foundDriver = driverDataRepository.getById(ID_1);
 
         assertEquals("Bartek", foundDriver.getOwnerFirstName());
     }
