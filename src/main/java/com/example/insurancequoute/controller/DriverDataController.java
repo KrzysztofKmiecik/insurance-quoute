@@ -2,9 +2,11 @@ package com.example.insurancequoute.controller;
 
 import com.example.insurancequoute.model.DriverData;
 import com.example.insurancequoute.service.DriverDataService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -16,8 +18,36 @@ class DriverDataController {
         this.driverDataService = driverDataService;
     }
 
-    @GetMapping("/drivers/getAll")
-    public List<DriverData> getAllDrivers(){
+    @GetMapping("/driver/getAll")
+    public List<DriverData> getAllDrivers() {
         return driverDataService.getAllDrivers();
+    }
+
+    @PostMapping("/driver")
+    public DriverData createDriver(@RequestParam DriverData driverData) {
+        return driverDataService.createDriver(driverData);
+    }
+
+    @DeleteMapping("/driver/{id}")
+    public ResponseEntity<Void> deleteDriverById(@PathParam("id") int id) {
+        driverDataService.deleteDriverById(id);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    @GetMapping("/driver/get/{id}")
+    public DriverData getDriverById(@PathParam("id") int id) {
+        return driverDataService.getDriverById(id);
+    }
+
+    @PutMapping("/driver/updatePhoneNumber/{id}/{phoneNumber}")
+    public DriverData updateDriversPhoneById(@PathParam("id") int id,
+                                             @PathParam("phoneNumber") int phoneNumber) {
+        return driverDataService.updateDriversPhoneById(id, phoneNumber);
+    }
+
+    @PutMapping("/driver/update/{id}")
+    public DriverData updateDriverById(@PathParam("id") int id,
+                                       @RequestParam DriverData driverData) {
+        return driverDataService.updateDriverById(id);
     }
 }
