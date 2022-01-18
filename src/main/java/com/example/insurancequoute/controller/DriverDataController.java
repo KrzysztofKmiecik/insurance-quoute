@@ -24,7 +24,7 @@ class DriverDataController {
     }
 
     @PostMapping("/driver")
-    public DriverData createDriver(@RequestParam DriverData driverData) {
+    public DriverData createDriver(@RequestBody DriverData driverData) {
         return driverDataService.createDriver(driverData);
     }
 

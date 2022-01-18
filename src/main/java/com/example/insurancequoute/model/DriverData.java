@@ -1,16 +1,26 @@
 package com.example.insurancequoute.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public
 class DriverData {
+    @Id
+    @Column(name = "id", nullable = false)
+    private Long id;
+
     private String prefix;
     private String ownerFirstName;
     private String ownerLastName;
@@ -29,4 +39,12 @@ class DriverData {
     private LocalDateTime firstRegisteredDate;
 
     private int premium;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
