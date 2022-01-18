@@ -18,14 +18,10 @@ class DriverDataRepositoryTest {
 
     @Test
     public void shouldGetAllDrivers() {
-        DriverData newDriver1 = DriverData.builder()
-                .id(123L)
-                .build();
-        driverDataRepository.save(newDriver1);
-        DriverData newDriver2 = DriverData.builder()
-                .id(456L)
-                .build();
-        driverDataRepository.save(newDriver2);
+        final long ID1 = 123L;
+        final long ID2 = 456L;
+
+        insertExampleDrivers(ID1, ID2);
 
         List<DriverData> foundDrivers = driverDataRepository.findAll();
 
@@ -60,14 +56,7 @@ class DriverDataRepositoryTest {
         final long ID1 = 123L;
         final long ID2 = 456L;
 
-        DriverData newDriver1 = DriverData.builder()
-                .id(ID1)
-                .build();
-        driverDataRepository.save(newDriver1);
-        DriverData newDriver2 = DriverData.builder()
-                .id(ID2)
-                .build();
-        driverDataRepository.save(newDriver2);
+        insertExampleDrivers(ID1, ID2);
 
         assertEquals(2, driverDataRepository.findAll().size());
 
@@ -82,14 +71,7 @@ class DriverDataRepositoryTest {
         final long ID1 = 123L;
         final long ID2 = 456L;
 
-        DriverData newDriver1 = DriverData.builder()
-                .id(ID1)
-                .build();
-        driverDataRepository.save(newDriver1);
-        DriverData newDriver2 = DriverData.builder()
-                .id(ID2)
-                .build();
-        driverDataRepository.save(newDriver2);
+        insertExampleDrivers(ID1, ID2);
 
         assertThrows(
                 EmptyResultDataAccessException.class,
@@ -99,7 +81,14 @@ class DriverDataRepositoryTest {
 
     @Test
     public void shouldGetDriverById() {
-        fail();
+        final long ID1 = 123L;
+        final long ID2 = 456L;
+
+        insertExampleDrivers(ID1, ID2);
+
+        DriverData foundDriver = driverDataRepository.getById(ID2);
+
+        assertEquals(ID2, foundDriver.getId());
     }
 
     @Test
@@ -127,4 +116,14 @@ class DriverDataRepositoryTest {
         fail();
     }
 
+    private void insertExampleDrivers(long ID1, long ID2) {
+        DriverData newDriver1 = DriverData.builder()
+                .id(ID1)
+                .build();
+        driverDataRepository.save(newDriver1);
+        DriverData newDriver2 = DriverData.builder()
+                .id(ID2)
+                .build();
+        driverDataRepository.save(newDriver2);
+    }
 }
