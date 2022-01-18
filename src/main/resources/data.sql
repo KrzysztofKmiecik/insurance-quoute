@@ -32,4 +32,4 @@ INSERT INTO drivers (id,
                      used_outside_the_registered_state,
                      current_value,
                      first_registered_date)
-VALUES (2,'Mrs','Add','Woo',123,'BakerStreet','ff','London','233-2','Coupe',1000,1,false,false,20000,'1995-01-01 00:00:01');
+VALUES (2,'Mrs','Anny','Woo',123,'BakerStreet','ff','London','233-2','Coupe',1000,1,false,false,20000,'1995-01-01 00:00:01');
