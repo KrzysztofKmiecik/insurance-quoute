@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+public
 class DriverData {
     private String prefix;
     private String ownerFirstName;
@@ -27,6 +28,5 @@ class DriverData {
     private int  currentValue;
     private LocalDateTime firstRegisteredDate;
 
-
-
+    private int premium;
 }
