@@ -11,12 +11,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest
 class DriverDataControllerTest {
@@ -29,37 +29,49 @@ class DriverDataControllerTest {
     private DriverDataService driverDataService;
 
     @Test
-    @DisplayName("http://localhost/driver/getAll -> 200")
+    @DisplayName("GET driver/getAll -> 200")
     public void getAllDrivers() throws Exception {
-
         mockMvc.perform(MockMvcRequestBuilders.get("/driver/getAll"))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
+    @DisplayName("POST driver -> 200")
     public void postDriver() throws Exception {
         DriverData driver = generateExampleDriver();
         String requestJson = objectMapper.writeValueAsString(driver);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/driver")
                         .contentType(MediaType.APPLICATION_JSON)
-                    .content(requestJson))
+                        .content(requestJson))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(status().isOk());
     }
 
     @Test
+    @DisplayName("POST driver -> 400")
     public void postDriverMissingBody() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/driver")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void deleteDriverById() {
-        fail();
+    @DisplayName("DELETE driver -> 200")
+    public void deleteDriverById() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/driver/24353"))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("DELETE driver missing param -> 405")
+    public void deleteDriverMissingId() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/driver/"))
+                .andDo(print())
+                .andExpect(status().isMethodNotAllowed());
     }
 
     @Test
