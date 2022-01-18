@@ -1,14 +1,35 @@
 package com.example.insurancequoute.repository;
 
+import com.example.insurancequoute.model.DriverData;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+@DataJpaTest
 class DriverDataRepositoryTest {
+
+    @Autowired
+    private DriverDataRepository driverDataRepository;
 
     @Test
     public void shouldGetAllDrivers() {
-        fail();
+        DriverData newDriver1 = DriverData.builder()
+                .id(123L)
+                .build();
+        driverDataRepository.save(newDriver1);
+        DriverData newDriver2 = DriverData.builder()
+                .id(456L)
+                .build();
+        driverDataRepository.save(newDriver2);
+
+        List<DriverData> foundDrivers = driverDataRepository.findAll();
+
+        assertFalse(foundDrivers.isEmpty());
+        assertEquals(2, foundDrivers.size());
     }
 
     @Test
@@ -18,7 +39,16 @@ class DriverDataRepositoryTest {
 
     @Test
     public void shouldSaveNewDriver() {
-        fail();
+        int startNumberOfDrivers = driverDataRepository.findAll().size();
+        DriverData newDriver = DriverData.builder()
+                .id(123L)
+                .build();
+
+        driverDataRepository.save(newDriver);
+        List<DriverData> foundDrivers = driverDataRepository.findAll();
+
+        assertFalse(foundDrivers.isEmpty());
+        assertEquals(startNumberOfDrivers+1, foundDrivers.size());
     }
 
     @Test
