@@ -1,4 +1,6 @@
 package com.example.insurancequoute.repository;
 
-public interface DriverDataRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface DriverDataRepository extends CrudRepository {
 }
