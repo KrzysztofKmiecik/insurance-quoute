@@ -6,8 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
@@ -98,7 +101,20 @@ class DriverDataRepositoryTest {
 
     @Test
     public void shouldUpdatePhoneById() {
-        fail();
+        final long ID1 = 123L;
+        final long ID2 = 456L;
+
+        insertExampleDrivers(ID1, ID2);
+
+        DriverData foundDriver = driverDataRepository.getById(ID1);
+
+        assertEquals("123456789", foundDriver.getTelephoneNumber());
+
+        driverDataRepository.updatePhoneById(ID1, "42763784587354");
+
+        foundDriver = driverDataRepository.getById(ID1);
+
+        assertEquals("42763784587354", foundDriver.getTelephoneNumber());
     }
 
     @Test
@@ -108,7 +124,25 @@ class DriverDataRepositoryTest {
 
     @Test
     public void shouldUpdateDriverById() {
-        fail();
+        final long ID1 = 123L;
+        final long ID2 = 456L;
+
+        insertExampleDrivers(ID1, ID2);
+
+        DriverData foundDriver = driverDataRepository.getById(ID1);
+
+        assertEquals("Adam", foundDriver.getOwnerFirstName());
+
+        DriverData driverToUpdate = DriverData.builder()
+                .id(ID1)
+                .ownerFirstName("Bartek")
+                .build();
+
+        driverDataRepository.updateDriverById(ID1, driverToUpdate);
+
+        foundDriver = driverDataRepository.getById(ID1);
+
+        assertEquals("Bartek", foundDriver.getOwnerFirstName());
     }
 
     @Test
@@ -119,6 +153,8 @@ class DriverDataRepositoryTest {
     private void insertExampleDrivers(long ID1, long ID2) {
         DriverData newDriver1 = DriverData.builder()
                 .id(ID1)
+                .telephoneNumber("123456789")
+                .ownerFirstName("Adam")
                 .build();
         driverDataRepository.save(newDriver1);
         DriverData newDriver2 = DriverData.builder()
