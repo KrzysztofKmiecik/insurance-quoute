@@ -1,4 +1,8 @@
 package com.example.insurancequoute.repository;
 
-public interface DriverDataRepository {
+import com.example.insurancequoute.model.DriverData;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DriverDataRepository  extends JpaRepository<DriverData,Long> {
+
 }

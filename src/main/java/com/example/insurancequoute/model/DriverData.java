@@ -4,12 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-class DriverData {
+@Table(name="drivers")
+public class DriverData {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String prefix;
     private String ownerFirstName;
     private String ownerLastName;
