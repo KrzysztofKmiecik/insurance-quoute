@@ -4,6 +4,7 @@ import com.example.insurancequoute.model.DriverData;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import java.util.List;
 
@@ -78,7 +79,22 @@ class DriverDataRepositoryTest {
 
     @Test
     public void shouldDeleteDriverByIdMissingDriver() {
-        fail();
+        final long ID1 = 123L;
+        final long ID2 = 456L;
+
+        DriverData newDriver1 = DriverData.builder()
+                .id(ID1)
+                .build();
+        driverDataRepository.save(newDriver1);
+        DriverData newDriver2 = DriverData.builder()
+                .id(ID2)
+                .build();
+        driverDataRepository.save(newDriver2);
+
+        assertThrows(
+                EmptyResultDataAccessException.class,
+                () -> driverDataRepository.deleteById(1L)
+        );
     }
 
     @Test
