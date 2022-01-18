@@ -34,7 +34,10 @@ class DriverDataRepositoryTest {
 
     @Test
     public void shouldGetAllDriversNoRecords() {
-        fail();
+        List<DriverData> foundDrivers = driverDataRepository.findAll();
+
+        assertTrue(foundDrivers.isEmpty());
+        assertEquals(0, foundDrivers.size());
     }
 
     @Test
