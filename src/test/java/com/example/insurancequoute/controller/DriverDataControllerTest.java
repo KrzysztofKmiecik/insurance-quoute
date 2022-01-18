@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,7 +58,7 @@ class DriverDataControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE driver -> 200")
+    @DisplayName("DELETE driver/{id} -> 200")
     public void deleteDriverById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/driver/24353"))
                 .andDo(print())
@@ -67,7 +66,7 @@ class DriverDataControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE driver missing param -> 405")
+    @DisplayName("DELETE driver/{id} missing param -> 405")
     public void deleteDriverMissingId() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/driver/"))
                 .andDo(print())
@@ -75,7 +74,7 @@ class DriverDataControllerTest {
     }
 
     @Test
-    @DisplayName("GET driver/get -> 200")
+    @DisplayName("GET driver/get/{id} -> 200")
     public void getDriverById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/driver/get/23535"))
                 .andDo(print())
@@ -83,7 +82,7 @@ class DriverDataControllerTest {
     }
 
     @Test
-    @DisplayName("GET driver/get missing param -> 405")
+    @DisplayName("GET driver/get/{id} missing param -> 405")
     public void getDriverByIdMissingId() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/driver/get/"))
                 .andDo(print())
@@ -91,13 +90,54 @@ class DriverDataControllerTest {
     }
 
     @Test
-    public void updateDriversPhoneById() {
-        fail();
+    @DisplayName("PUT driver/updatePhoneNumber/{id}/{phoneNumber} -> 200")
+    public void updateDriversPhoneById() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/driver/updatePhoneNumber/123/2465768"))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void updateDriverById() {
-        fail();
+    @DisplayName("PUT driver/updatePhoneNumber/{id}/{phoneNumber} missing param-> 405")
+    public void updateDriversPhoneByIdMissingParameters() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/driver/updatePhoneNumber"))
+                .andDo(print())
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    @DisplayName("PUT driver/update/{id} -> 200")
+    public void updateDriverById() throws Exception {
+        DriverData driver = generateExampleDriver();
+        String requestJson = objectMapper.writeValueAsString(driver);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/driver/update/2465768")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("PUT driver/update/{id} missing id -> 405")
+    public void updateDriverByIdMissingParam() throws Exception {
+        DriverData driver = generateExampleDriver();
+        String requestJson = objectMapper.writeValueAsString(driver);
+
+        mockMvc.perform(MockMvcRequestBuilders.put("/driver/update/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestJson))
+                .andDo(print())
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    @DisplayName("PUT driver/update/{id} missing id -> 400")
+    public void updateDriverByIdMissingBody() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.put("/driver/update/34353")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     private DriverData generateExampleDriver() {

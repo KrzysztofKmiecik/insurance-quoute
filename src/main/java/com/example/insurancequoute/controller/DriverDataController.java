@@ -43,7 +43,7 @@ class DriverDataController {
 
     @PutMapping("/driver/update/{id}")
     public DriverData updateDriverById(@PathVariable("id") int id,
-                                       @PathVariable DriverData driverData) {
-        return driverDataService.updateDriverById(id);
+                                       @RequestBody DriverData driverData) {
+        return driverDataService.updateDriverById(id, driverData);
     }
 }

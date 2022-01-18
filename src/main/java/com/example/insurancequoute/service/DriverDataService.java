@@ -27,7 +27,7 @@ public class DriverDataService {
         return null;
     }
 
-    public DriverData updateDriverById(int id) {
+    public DriverData updateDriverById(int id, DriverData driverData) {
         return null;
     }
 }
